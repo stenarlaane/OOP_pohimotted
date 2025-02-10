@@ -31,7 +31,7 @@ def find_fastest_growing(tweets: list) -> Tweet:
     :param tweets: Input list of tweets.
     :return: Fastest growing tweet.
     """
-    pass
+    return max(tweets, key=lambda tweet: tweet.retweets / tweet.time)
 
 
 def sort_by_popularity(tweets: list) -> list:
@@ -48,7 +48,7 @@ def sort_by_popularity(tweets: list) -> list:
     :param tweets: Input list of tweets.
     :return: List of tweets by popularity
     """
-    pass
+    return sorted(tweets, key=lambda tweet: (tweet.retweets, -tweet.time), reverse=True)
 
 
 def filter_by_hashtag(tweets: list, hashtag: str) -> list:
@@ -61,7 +61,7 @@ def filter_by_hashtag(tweets: list, hashtag: str) -> list:
     :param hashtag: Hashtag to filter by.
     :return: Filtered list of tweets.
     """
-    pass
+    return [tweet for tweet in tweets if hashtag in tweet.content]
 
 
 def sort_hashtags_by_popularity(tweets: list) -> list:
@@ -78,7 +78,18 @@ def sort_hashtags_by_popularity(tweets: list) -> list:
     :param tweets: Input list of tweets.
     :return: List of hashtags by popularity.
     """
-    pass
+    hashtags_popular = {}
+
+    for tweet in tweets:
+        hashtags = [word for word in tweet.content.split() if word.startswith('#')]
+        for hashtag in hashtags:
+            if hashtag in hashtags_popular:
+                hashtags_popular[hashtag] += tweet.retweets
+            else:
+                hashtags_popular[hashtag] = tweet.retweets
+
+    sorted_popular = sorted(hashtags_popular.items(), key=lambda x: (-x[1], x[0]))
+    return [hashtag for hashtag, _ in sorted_popular]
 
 
 if __name__ == '__main__':
